@@ -82,15 +82,34 @@ const SiteSettings = () => {
                 required
               />
             </div>
-            <div>
-              <label style={labelStyle}>Logo Image URL</label>
-              <input
-                type="text"
-                value={settings.logoUrl}
-                onChange={e => setSettings({ ...settings, logoUrl: e.target.value })}
-                style={inputStyle}
-                placeholder="https://..."
-              />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <label style={labelStyle}>Logo Image URL</label>
+                <input
+                  type="text"
+                  value={settings.logoUrl}
+                  onChange={e => setSettings({ ...settings, logoUrl: e.target.value })}
+                  style={inputStyle}
+                  placeholder="https://..."
+                />
+              </div>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                border: '1px solid #333',
+                borderRadius: '4px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#0a0a0a',
+                overflow: 'hidden'
+              }}>
+                {settings.logoUrl ? (
+                  <img src={settings.logoUrl} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                ) : (
+                  <div style={{ width: '20px', height: '20px', backgroundColor: '#cc0000' }}></div>
+                )}
+              </div>
             </div>
           </div>
         </div>

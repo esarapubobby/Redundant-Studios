@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../components/home/Hero';
 import FeaturedGames from '../components/home/FeaturedGames';
 import FeaturedGameSection from '../components/home/FeaturedGameSection';
+import PreviousGamesSection from '../components/home/PreviousGamesSection';
 import Founders from '../components/home/Founders';
 import SocialLinks from '../components/home/SocialLinks';
 import { useFirestoreContent } from '../hooks/useFirestoreContent';
@@ -15,10 +16,11 @@ const Home = () => {
   const visibility = content?.visibility || {};
 
   return (
-    <div>
+    <div style={{ overflowX: 'hidden' }}>
       {visibility.hero !== false && <Hero />}
       {visibility.featuredGame !== false && <FeaturedGameSection />}
       {visibility.featuredGames !== false && <FeaturedGames />}
+      {visibility.previousGames !== false && <PreviousGamesSection />}
       {visibility.founders !== false && <Founders />}
       {visibility.socialLinks !== false && <SocialLinks />}
     </div>

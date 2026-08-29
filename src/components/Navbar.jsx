@@ -29,18 +29,13 @@ const Navbar = () => {
       alignItems: 'center',
       transition: 'all 0.3s ease'
     }}>
-      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-        <motion.div
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-        >
-          {content?.logoUrl ? (
-            <img src={content.logoUrl} alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-          ) : (
-            <div style={{ width: '40px', height: '40px', backgroundColor: '#cc0000', borderRadius: '4px' }}></div>
-          )}
-        </motion.div>
-        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px' }}>
+      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+        {content?.logoUrl ? (
+          <img src={content.logoUrl} alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', display: 'block' }} />
+        ) : (
+          <div style={{ width: '40px', height: '40px', backgroundColor: '#cc0000', borderRadius: '4px', display: 'block' }}></div>
+        )}
+        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px', lineHeight: '1' }}>
           {content?.studioName || 'Redundant Studios'}
         </span>
       </Link>

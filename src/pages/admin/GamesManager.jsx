@@ -7,7 +7,7 @@ const GamesManager = () => {
   const [loading, setLoading] = useState(true);
   const [editingGame, setEditingGame] = useState(null);
   const [newGame, setNewGame] = useState({
-    title: '', description: '', genre: '', platform: '', thumbnailUrl: '', trailerUrl: '', playstoreUrl: '', status: 'Released', order: 0, featured: false
+    title: '', description: '', genre: '', platform: '', thumbnailUrl: '', trailerUrl: '', playstoreUrl: '', status: 'Released', order: 0, featured: false, tags: '', modes: ''
   });
 
   const fetchGames = async () => {
@@ -25,7 +25,7 @@ const GamesManager = () => {
     e.preventDefault();
     try {
       await addDoc(collection(db, 'games'), newGame);
-      setNewGame({ title: '', description: '', genre: '', platform: '', thumbnailUrl: '', trailerUrl: '', playstoreUrl: '', status: 'Released', order: 0, featured: false });
+      setNewGame({ title: '', description: '', genre: '', platform: '', thumbnailUrl: '', trailerUrl: '', playstoreUrl: '', status: 'Released', order: 0, featured: false, tags: '', modes: '' });
       await fetchGames();
     } catch (err) { alert('Error adding game'); }
   };
@@ -55,7 +55,6 @@ const GamesManager = () => {
     <div>
       <h2 style={{ color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>Games Manager</h2>
 
-      {/* Add New Game Form */}
       <div style={{ backgroundColor: '#1a1a1a', padding: '1.5rem', borderRadius: '8px', border: '1px solid #333', marginBottom: '3rem' }}>
         <h3 style={{ color: '#fff', marginBottom: '1.5rem' }}>Add New Game</h3>
         <form onSubmit={handleAddGame} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
@@ -94,6 +93,14 @@ const GamesManager = () => {
               <option value="Coming Soon">Coming Soon</option>
             </select>
           </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={labelStyle}>Tags (comma separated)</label>
+            <input placeholder="Unity, 3 Modes, In Development" value={newGame.tags} onChange={e => setNewGame({...newGame, tags: e.target.value})} style={inputStyle} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={labelStyle}>Modes (Format: Name|Desc, Name|Desc)</label>
+            <input placeholder="Last Stand|Survive waves, Challenge|Eliminate 50" value={newGame.modes} onChange={e => setNewGame({...newGame, modes: e.target.value})} style={inputStyle} />
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
             <input
               type="checkbox"
@@ -112,7 +119,6 @@ const GamesManager = () => {
         </form>
       </div>
 
-      {/* Games List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {games.map(game => (
           <div key={game.id} style={{ backgroundColor: '#1a1a1a', padding: '1rem', borderRadius: '8px', border: '1px solid #333', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -131,7 +137,6 @@ const GamesManager = () => {
         ))}
       </div>
 
-      {/* Edit Modal */}
       {editingGame && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000 }}>
           <form onSubmit={handleUpdateGame} style={{ backgroundColor: '#1a1a1a', padding: '2rem', borderRadius: '8px', border: '1px solid #cc0000', width: '90%', maxWidth: '700px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
@@ -170,6 +175,14 @@ const GamesManager = () => {
                 <option value="Released">Released</option>
                 <option value="Coming Soon">Coming Soon</option>
               </select>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label style={labelStyle}>Tags (comma separated)</label>
+              <input value={editingGame.tags} onChange={e => setEditingGame({...editingGame, tags: e.target.value})} style={inputStyle} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label style={labelStyle}>Modes (Name|Desc, ...)</label>
+              <input value={editingGame.modes} onChange={e => setEditingGame({...editingGame, modes: e.target.value})} style={inputStyle} />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
               <input
