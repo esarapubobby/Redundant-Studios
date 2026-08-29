@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm *)",
+      "Bash(where npm *)",
+      "Bash(cmd /c node -v)",
+      "Bash(cmd /c \"node -v\")",
+      "Bash(npm.cmd *)",
+      "Bash(cmd /C \"npm -v\")",
+      "Bash(env)",
+      "Bash(cmd /c \"where npm\")",
+      "Bash(cmd /c \"echo %PATH%\")",
+      "Bash(npx *)",
+      "Bash(cmd /C \"where npm\")",
+      "Bash(cmd /C \"node -v\")",
+      "Bash(/c/Program Files/nodejs/npm.cmd create *)",
+      "Bash(cmd /C \"set PATH=%PATH%;C:\\\\\\\\Program Files\\\\\\\\nodejs && npm create vite@latest . -- --template react\")",
+      "Bash(cmd /C \"set PATH=C:\\\\\\\\Program Files\\\\\\\\nodejs;%PATH% && npm create vite@latest . -- --template react --yes\")",
+      "Bash(cmd /C \"echo hello\")",
+      "Bash(netstat -ano)",
+      "Bash(taskkill *)",
+      "Bash(cmd /C \"taskkill /F /PID 2820\")"
+    ]
+  }
+}
