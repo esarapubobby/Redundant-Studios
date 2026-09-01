@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { COLORS, SPACING, BORDER_RADIUS, FONT, btnStyle, labelStyle, inputStyle } from '../../styles';
 
 const HeroEditor = () => {
-  const [hero, setHero] = useState({ headline: '', subheadline: '', backgroundImageUrl: '' });
+  const [hero, setHero] = useState({ headline: '', subheadline: '', backgroundImageUrl: '', videoBackgroundUrl: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -33,12 +34,12 @@ const HeroEditor = () => {
     setSaving(false);
   };
 
-  if (loading) return <div style={{ color: '#fff' }}>Loading...</div>;
+  if (loading) return <div style={{ color: COLORS.white }}>Loading...</div>;
 
   return (
     <div>
-      <h2 style={{ color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>Hero Section Editor</h2>
-      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '600px' }}>
+      <h2 style={{ color: COLORS.white, marginBottom: SPACING.md, textTransform: 'uppercase' }}>Hero Section Editor</h2>
+      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md, maxWidth: 600 }}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <label style={labelStyle}>Hero Headline</label>
           <input
@@ -54,7 +55,7 @@ const HeroEditor = () => {
           <textarea
             value={hero.subheadline || ''}
             onChange={e => setHero({ ...hero, subheadline: e.target.value })}
-            style={{...inputStyle, minHeight: '100px'}}
+            style={{ ...inputStyle, minHeight: '100px' }}
             required
           />
         </div>
@@ -65,23 +66,24 @@ const HeroEditor = () => {
             value={hero.backgroundImageUrl || ''}
             onChange={e => setHero({ ...hero, backgroundImageUrl: e.target.value })}
             style={inputStyle}
-            required
           />
+          <span style={{ fontSize: '0.75rem', color: COLORS.muted, marginTop: '0.4rem' }}>Used if no video is provided</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <label style={labelStyle}>Hero Background Video URL (YouTube — optional)</label>
+          <input
+            type="text"
+            value={hero.videoBackgroundUrl || ''}
+            onChange={e => setHero({ ...hero, videoBackgroundUrl: e.target.value })}
+            style={inputStyle}
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
+          <span style={{ fontSize: '0.75rem', color: COLORS.muted, marginTop: '0.4rem' }}>Paste a YouTube link. If set, this will be used instead of the image.</span>
         </div>
         <button
           type="submit"
           disabled={saving}
-          style={{
-            padding: '1rem',
-            backgroundColor: '#cc0000',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            fontSize: '1.1rem'
-          }}
+          style={btnStyle}
         >
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
@@ -89,8 +91,5 @@ const HeroEditor = () => {
     </div>
   );
 };
-
-const labelStyle = { display: 'block', color: '#aaa', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: '500' };
-const inputStyle = { width: '100%', padding: '0.8rem', backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '4px', color: '#fff' };
 
 export default HeroEditor;

@@ -6,23 +6,37 @@ import PreviousGamesSection from '../components/home/PreviousGamesSection';
 import Founders from '../components/home/Founders';
 import SocialLinks from '../components/home/SocialLinks';
 import { useFirestoreContent } from '../hooks/useFirestoreContent';
+import { DEFAULT_CONTENT } from '../utils/defaultContent';
+import { COLORS, SPACING } from '../styles';
 
 const Home = () => {
-  const { content, loading } = useFirestoreContent();
+  const { content, loading, error } = useFirestoreContent();
+  const displayContent = content || DEFAULT_CONTENT;
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>Loading...</div>;
-  if (!content) return <div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>Content not found.</div>;
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: COLORS.bg
+      }}>
+        <div style={{ textAlign: 'center', color: COLORS.secondary }}>Loading...</div>
+      </div>
+    );
+  }
 
-  const visibility = content?.visibility || {};
+  const visibility = displayContent?.visibility || {};
 
   return (
-    <div style={{ overflowX: 'hidden' }}>
-      {visibility.hero !== false && <Hero />}
-      {visibility.featuredGame !== false && <FeaturedGameSection />}
-      {visibility.featuredGames !== false && <FeaturedGames />}
-      {visibility.previousGames !== false && <PreviousGamesSection />}
-      {visibility.founders !== false && <Founders />}
-      {visibility.socialLinks !== false && <SocialLinks />}
+    <div style={{ overflowX: 'hidden', backgroundColor: COLORS.bg }}>
+      {visibility.hero !== false && <Hero content={displayContent} />}
+      {visibility.featuredGame !== false && <FeaturedGameSection content={displayContent} />}
+      {visibility.featuredGames !== false && <FeaturedGames content={displayContent} />}
+      {visibility.previousGames !== false && <PreviousGamesSection content={displayContent} />}
+      {visibility.founders !== false && <Founders content={displayContent} />}
+      {visibility.socialLinks !== false && <SocialLinks content={displayContent} />}
     </div>
   );
 };

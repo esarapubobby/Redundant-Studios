@@ -1,115 +1,180 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useFirestoreContent } from '../hooks/useFirestoreContent';
-import { motion, AnimatePresence } from 'framer-motion';
+import { DEFAULT_CONTENT } from '../utils/defaultContent';
+import { COLORS, SPACING, FONT } from '../styles';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { content } = useFirestoreContent();
+  const location = useLocation();
 
-  const navLinks = content?.navbarLabels || [
-    { name: 'Home', path: '/' },
-    { name: 'Games', path: '/games' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-  ];
+  const data = content || DEFAULT_CONTENT;
+  const navLinks = data?.navbarLabels || DEFAULT_CONTENT.navbarLabels;
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <nav style={{
       position: 'sticky',
       top: 0,
       zIndex: 1000,
-      backgroundColor: 'rgba(10, 10, 10, 0.8)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '2px solid #cc0000',
-      padding: '1rem 2rem',
+      backgroundColor: '#0a0a0a',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+      padding: `1.25rem ${SPACING.lg}`,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      transition: 'all 0.3s ease'
     }}>
-      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-        {content?.logoUrl ? (
-          <img src={content.logoUrl} alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', display: 'block' }} />
+      <Link to="/" style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
+        textDecoration: 'none',
+      }}>
+        {data?.logoUrl ? (
+          <img
+            src={data.logoUrl}
+            alt="Logo"
+            style={{
+              width: '36px',
+              height: '36px',
+              objectFit: 'contain',
+            }}
+          />
         ) : (
-          <div style={{ width: '40px', height: '40px', backgroundColor: '#cc0000', borderRadius: '4px', display: 'block' }}></div>
+          <div style={{
+            fontFamily: FONT.display,
+            fontSize: '1.6rem',
+            fontWeight: 800,
+            color: COLORS.primary,
+            letterSpacing: '1px',
+            lineHeight: 1,
+          }}>
+            R
+          </div>
         )}
-        <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px', lineHeight: '1' }}>
-          {content?.studioName || 'Redundant Studios'}
+        <span style={{
+          fontFamily: FONT.display,
+          fontSize: '1.1rem',
+          fontWeight: 700,
+          color: COLORS.white,
+          textTransform: 'uppercase',
+          letterSpacing: '3px',
+          lineHeight: 1,
+        }}>
+          {data?.studioName || 'Redundant Studios'}
         </span>
       </Link>
 
-      {/* Desktop Menu */}
-      <div style={{ display: 'flex', gap: '2rem' }} className="desktop-menu">
-        {navLinks.map((link, idx) => (
-          <Link
-            key={idx}
-            to={link.path}
-            style={{
-              color: '#ccc',
-              fontWeight: '500',
-              transition: 'color 0.3s',
-              textDecoration: 'none',
-              position: 'relative',
-              padding: '5px 0'
-            }}
-            onMouseEnter={(e) => e.target.style.color = '#cc0000'}
-            onMouseLeave={(e) => e.target.style.color = '#ccc'}
-          >
-            {link.name}
-          </Link>
-        ))}
+      <div className="nav-desktop" style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+        {navLinks.map((link) => {
+          const isActive = location.pathname === link.path;
+          return (
+            <Link
+              key={link.path}
+              to={link.path}
+              style={{
+                fontFamily: FONT.body,
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                color: isActive ? COLORS.primary : COLORS.lightText,
+                position: 'relative',
+                paddingBottom: '4px',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={(e) => e.target.style.color = COLORS.white}
+              onMouseLeave={(e) => e.target.style.color = isActive ? COLORS.primary : COLORS.lightText}
+            >
+              {link.name}
+              {isActive && (
+                <span style={{
+                  position: 'absolute',
+                  left: 0, right: 0,
+                  bottom: 0,
+                  height: '2px',
+                  background: COLORS.primary,
+                }} />
+              )}
+            </Link>
+          );
+        })}
       </div>
 
-      {/* Mobile Toggle */}
-      <div className="mobile-toggle" style={{ display: 'none' }}>
-        <button onClick={() => setIsOpen(!isOpen)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}>
-          {isOpen ? <X /> : <Menu />}
-        </button>
-      </div>
+      <button
+        className="nav-mobile-btn"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle menu"
+        style={{
+          display: 'none',
+          background: 'transparent',
+          border: 'none',
+          color: COLORS.white,
+          cursor: 'pointer',
+          padding: '0.25rem',
+        }}
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: '-100%' }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: '-100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+      {isOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: '#0a0a0a',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '2.5rem',
+          zIndex: 999,
+        }}>
+          <button
+            onClick={() => setIsOpen(false)}
+            aria-label="Close menu"
             style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: '#0a0a0a',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '2rem',
-              zIndex: 999
+              position: 'absolute',
+              top: '1.5rem',
+              right: '1.5rem',
+              background: 'transparent',
+              border: 'none',
+              color: COLORS.white,
+              padding: '0.25rem',
             }}
           >
-            {navLinks.map((link, idx) => (
-              <Link
-                key={idx}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                style={{ fontSize: '2rem', color: '#fff', fontWeight: 'bold', textTransform: 'uppercase', textDecoration: 'none' }}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <X size={28} />
+          </button>
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => setIsOpen(false)}
+              style={{
+                fontFamily: FONT.display,
+                fontSize: '2.5rem',
+                color: COLORS.white,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                letterSpacing: '4px',
+              }}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 768px) {
-          .desktop-menu { display: none !important; }
-          .mobile-toggle { display: block !important; }
+          .nav-desktop { display: none !important; }
+          .nav-mobile-btn { display: block !important; }
         }
       `}</style>
     </nav>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { useGames } from '../../hooks/useGames';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { getEmbedUrl } from '../../utils/youtube';
+import { Play, ChevronRight } from 'lucide-react';
+import { COLORS, SPACING, BORDER_RADIUS, FONT, GRADIENTS } from '../../styles';
 
 const PreviousGamesSection = () => {
   const { games, loading } = useGames();
@@ -14,116 +15,302 @@ const PreviousGamesSection = () => {
   if (previousGames.length === 0) return null;
 
   return (
-    <section style={{ padding: '8rem 2rem', backgroundColor: '#0a0a0a' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '4rem' }}>
-          <h2 style={{
-            fontSize: '2.5rem',
-            color: '#fff',
+    <section style={{
+      padding: `${SPACING.xxxl} ${SPACING.lg}`,
+      backgroundColor: COLORS.bg,
+      borderTop: `1px solid ${COLORS.inputBorder}`,
+    }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          marginBottom: SPACING.md,
+        }}>
+          <span style={{
+            display: 'inline-block',
+            width: '40px',
+            height: '2px',
+            background: COLORS.primary,
+          }} />
+          <span style={{
+            fontFamily: FONT.body,
+            fontSize: '0.85rem',
+            color: COLORS.primary,
+            fontWeight: 700,
+            letterSpacing: '4px',
             textTransform: 'uppercase',
+          }}>
+            Released
+          </span>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          marginBottom: SPACING.xl,
+          flexWrap: 'wrap',
+          gap: SPACING.md,
+        }}>
+          <h2 style={{
+            fontFamily: FONT.display,
+            fontSize: 'clamp(2rem, 5vw, 3.25rem)',
+            color: COLORS.white,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '3px',
             margin: 0,
-            textAlign: 'center'
+            lineHeight: '0.95',
           }}>
             Previous Projects
-            <div style={{ width: '60px', height: '4px', backgroundColor: '#cc0000', margin: '10px auto 0' }}></div>
           </h2>
+          <Link
+            to="/games"
+            style={{
+              color: COLORS.primary,
+              fontFamily: FONT.body,
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              fontSize: '0.85rem',
+              textDecoration: 'none',
+              letterSpacing: '2px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              transition: 'opacity 0.2s ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+          >
+            View All <ChevronRight size={14} />
+          </Link>
         </div>
-        <Link
-          to="/games"
-          style={{
-            position: 'absolute',
-            right: 0,
-            top: '0px',
-            color: '#cc0000',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            fontSize: '1rem',
-            textDecoration: 'none',
-            borderBottom: '2px solid #cc0000',
-            paddingBottom: '4px',
-            transition: 'all 0.3s'
-          }}
-          onMouseEnter={(e) => e.target.style.color = '#ff0000'}
-          onMouseLeave={(e) => e.target.style.color = '#cc0000'}
-        >
-          View All Games →
-        </Link>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '2.5rem'
-        }}>
-          {previousGames.map((game, idx) => {
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: SPACING.lg,
+        }}
+        className="previous-grid"
+        >
+          {previousGames.map((game) => {
             const embedUrl = getEmbedUrl(game.trailerUrl);
             return (
-              <motion.div
+              <div
                 key={game.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                whileHover={{ y: -10 }}
                 style={{
-                  backgroundColor: '#111',
-                  border: '1px solid #222',
-                  borderRadius: '12px',
+                  background: COLORS.surface,
+                  borderRadius: BORDER_RADIUS.md,
                   overflow: 'hidden',
-                  transition: 'all 0.3s',
-                  cursor: 'pointer',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                  border: `1px solid ${COLORS.inputBorder}`,
+                  transition: 'box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#cc0000'}
-                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#222'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 50px rgba(225, 6, 0, 0.2), 0 0 0 1px rgba(225, 6, 0, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
-                <div style={{ position: 'relative', width: '100%', height: '200px', overflow: 'hidden' }}>
+                <div style={{
+                  position: 'relative',
+                  width: '100%',
+                  aspectRatio: '16/9',
+                  overflow: 'hidden',
+                  backgroundColor: COLORS.bgElevated,
+                }}>
                   {embedUrl ? (
                     <iframe
-                      src={`${embedUrl}?autoplay=0&mute=1&controls=0&loop=1&playlist=${embedUrl.split('/').pop()}`}
-                      style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none' }}
+                      src={`${embedUrl}?rel=0`}
+                      style={{
+                        position: 'absolute',
+                        top: 0, left: 0,
+                        width: '100%', height: '100%',
+                        border: 'none',
+                      }}
                       title={game.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : game.thumbnailUrl ? (
+                    <img
+                      src={game.thumbnailUrl}
+                      alt={game.title}
+                      loading="lazy"
+                      style={{
+                        width: '100%', height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
                     />
                   ) : (
-                    <motion.img
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.4 }}
-                      src={game.thumbnailUrl || 'https://via.placeholder.com/400x225'}
-                      alt={game.title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      color: COLORS.muted,
+                    }}>
+                      <Play size={32} color={COLORS.primary} />
+                      <span style={{
+                        fontFamily: FONT.body,
+                        fontSize: '0.75rem',
+                        letterSpacing: '2px',
+                        textTransform: 'uppercase',
+                        fontWeight: 600,
+                      }}>Coming Soon</span>
+                    </div>
                   )}
+
+                  <div style={{
+                    position: 'absolute',
+                    top: '0.75rem',
+                    left: '0.75rem',
+                    padding: '0.3rem 0.7rem',
+                    background: 'rgba(10,10,10,0.85)',
+                    color: COLORS.primary,
+                    fontFamily: FONT.body,
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                    borderRadius: BORDER_RADIUS.sm,
+                  }}>
+                    {game.status}
+                  </div>
                 </div>
-                <div style={{ padding: '1.5rem' }}>
-                  <h3 style={{ fontSize: '1.5rem', color: '#fff', margin: '0 0 0.5rem 0', fontWeight: 'bold' }}>{game.title}</h3>
-                  <p style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: '1.4' }}>
-                    {game.genre} | {game.platform}
-                  </p>
-                  <Link
-                    to="/games"
-                    style={{
-                      display: 'block',
-                      textAlign: 'center',
-                      padding: '0.8rem',
-                      backgroundColor: 'transparent',
-                      color: '#fff',
-                      border: '1px solid #cc0000',
-                      fontWeight: 'bold',
-                      textTransform: 'uppercase',
-                      borderRadius: '4px',
-                      textDecoration: 'none',
-                      transition: 'all 0.3s'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#cc0000'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    View Game
-                  </Link>
+
+                <div style={{ padding: SPACING.md, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <h3 style={{
+                    fontFamily: FONT.display,
+                    fontSize: '1.3rem',
+                    color: COLORS.white,
+                    margin: 0,
+                    fontWeight: 700,
+                    letterSpacing: '1.5px',
+                    marginBottom: '0.4rem',
+                    lineHeight: '1.1',
+                  }}>
+                    {game.title}
+                  </h3>
+                  <div style={{
+                    fontFamily: FONT.body,
+                    fontSize: '0.8rem',
+                    color: COLORS.muted,
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                    fontWeight: 600,
+                    marginBottom: SPACING.sm,
+                  }}>
+                    {game.genre} · {game.platform}
+                  </div>
+                  {game.description && (
+                    <p style={{
+                      fontFamily: FONT.body,
+                      fontSize: '0.9rem',
+                      color: COLORS.secondary,
+                      lineHeight: 1.5,
+                      margin: 0,
+                      marginBottom: SPACING.md,
+                      fontWeight: 500,
+                      flex: 1,
+                    }}>
+                      {game.description.length > 120 ? game.description.substring(0, 120) + '...' : game.description}
+                    </p>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    {embedUrl && (
+                      <a
+                        href={embedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          padding: '0.6rem 1rem',
+                          background: GRADIENTS.primary,
+                          color: COLORS.white,
+                          fontFamily: FONT.body,
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '2px',
+                          fontSize: '0.7rem',
+                          borderRadius: BORDER_RADIUS.md,
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                          flex: 1,
+                          justifyContent: 'center',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 0 20px rgba(225, 6, 0, 0.4)'}
+                        onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+                      >
+                        <Play size={12} fill={COLORS.white} />
+                        Watch Trailer
+                      </a>
+                    )}
+                    {game.playstoreUrl && (
+                      <a
+                        href={game.playstoreUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '0.6rem 1rem',
+                          background: 'transparent',
+                          color: COLORS.white,
+                          fontFamily: FONT.body,
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '2px',
+                          fontSize: '0.7rem',
+                          borderRadius: BORDER_RADIUS.md,
+                          border: `1px solid ${COLORS.inputBorder}`,
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                          flex: 1,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = COLORS.primary;
+                          e.currentTarget.style.color = COLORS.primary;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = COLORS.inputBorder;
+                          e.currentTarget.style.color = COLORS.white;
+                        }}
+                      >
+                        Play Store
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .previous-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 1100px) and (min-width: 901px) {
+          .previous-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { COLORS, SPACING, BORDER_RADIUS, FONT, labelStyle, inputStyle, btnStyle } from '../../styles';
 
 const ContactEditor = () => {
   const [contact, setContact] = useState({ email: '', discordUrl: '', instagramUrl: '', linkedinUrl: '', youtubeUrl: '', playstoreUrl: '' });
@@ -33,12 +34,12 @@ const ContactEditor = () => {
     setSaving(false);
   };
 
-  if (loading) return <div style={{ color: '#fff' }}>Loading...</div>;
+  if (loading) return <div style={{ color: COLORS.white }}>Loading...</div>;
 
   return (
     <div>
-      <h2 style={{ color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>Contact Info Editor</h2>
-      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '600px' }}>
+      <h2 style={{ color: COLORS.white, marginBottom: SPACING.md, textTransform: 'uppercase' }}>Contact Info Editor</h2>
+      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md, maxWidth: 600 }}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <label style={labelStyle}>Contact Email Address</label>
           <input
@@ -97,17 +98,7 @@ const ContactEditor = () => {
         <button
           type="submit"
           disabled={saving}
-          style={{
-            padding: '1rem',
-            backgroundColor: '#cc0000',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            fontSize: '1.1rem'
-          }}
+          style={btnStyle}
         >
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
@@ -115,8 +106,5 @@ const ContactEditor = () => {
     </div>
   );
 };
-
-const labelStyle = { display: 'block', color: '#aaa', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: '500' };
-const inputStyle = { width: '100%', padding: '0.8rem', backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '4px', color: '#fff' };
 
 export default ContactEditor;

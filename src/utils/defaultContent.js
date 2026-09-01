@@ -1,0 +1,60 @@
+export const DEFAULT_CONTENT = {
+  studioName: 'Redundant Studios',
+  logoUrl: '',
+  navbarLabels: [
+    { name: 'Home', path: '/' },
+    { name: 'Games', path: '/games' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
+  ],
+  hero: {
+    headline: 'Crafting Worlds Beyond Imagination',
+    subheadline: 'We are Redundant Studios — an indie team building immersive, story-driven games for players who crave something different.',
+    backgroundImageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920',
+    videoBackgroundUrl: '',
+  },
+  featuredGame: {
+    title: 'Featured Title',
+    description: 'An upcoming adventure that redefines the genre.',
+    imageUrl: 'https://via.placeholder.com/800x450',
+    playstoreUrl: '',
+  },
+  featuredGames: [],
+  previousGames: [],
+  about: {
+    description: 'Redundant Studios is an indie game development team passionate about creating unforgettable gaming experiences. We combine innovative gameplay with stunning visuals to deliver games that resonate with players worldwide.',
+    values: [
+      { title: 'Innovation', description: 'Pushing boundaries with fresh ideas and mechanics.' },
+      { title: 'Quality', description: 'Polished experiences that respect players time.' },
+      { title: 'Community', description: 'Building games with and for our players.' },
+    ],
+  },
+  contact: {
+    email: 'hello@redundantstudios.com',
+    instagramUrl: '',
+    linkedinUrl: '',
+    youtubeUrl: '',
+    playstoreUrl: '',
+  },
+  socials: {
+    instagramUrl: '',
+    linkedinUrl: '',
+    youtubeUrl: '',
+    twitterUrl: '',
+  },
+  teamImages: {},
+  font: {
+    display: 'Barlow Condensed',
+    body: 'Rajdhani',
+    displayWeight: 700,
+    bodyWeight: 500,
+  },
+  visibility: {
+    hero: true,
+    featuredGame: true,
+    featuredGames: true,
+    previousGames: true,
+    founders: true,
+    socialLinks: true,
+  },
+};

@@ -1,62 +1,237 @@
 import React from 'react';
 import { useFirestoreContent } from '../hooks/useFirestoreContent';
+import { DEFAULT_CONTENT } from '../utils/defaultContent';
+import { COLORS, SPACING, BORDER_RADIUS, FONT, GRADIENTS } from '../styles';
 
 const About = () => {
-  const { content, loading } = useFirestoreContent();
-  const about = content?.about;
+  const { content: hookContent } = useFirestoreContent();
+  const content = hookContent || DEFAULT_CONTENT;
+  const about = content?.about || DEFAULT_CONTENT.about;
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>Loading...</div>;
-  if (!about) return <div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>About content not found.</div>;
-
-  const team = [
-    { name: 'Srinu', role: 'Founder & CEO', image: content?.teamImages?.srinu || 'https://via.placeholder.com/150' },
-    { name: 'Bobby', role: 'Co-Founder & Lead Dev', image: content?.teamImages?.bobby || 'https://via.placeholder.com/150' },
-    { name: 'Badri', role: 'Co-Founder & Art Director', image: content?.teamImages?.badri || 'https://via.placeholder.com/150' },
-  ];
+  // Prefer the founders array (full data with socials); fall back to teamImages
+  const founders = content?.founders && content.founders.length > 0
+    ? content.founders
+    : [
+        { name: 'Srinu', role: 'Founder & CEO', image: content?.teamImages?.srinu },
+        { name: 'Bobby', role: 'Co-Founder & Lead Dev', image: content?.teamImages?.bobby },
+        { name: 'Badri', role: 'Co-Founder & Art Director', image: content?.teamImages?.badri },
+      ];
 
   return (
-    <div style={{ padding: '5rem 2rem', backgroundColor: '#0a0a0a', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '3rem', color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>About Us</h1>
-        <p style={{ fontSize: '1.2rem', color: '#ccc', lineHeight: '1.8', marginBottom: '4rem' }}>
-          {about.description}
-        </p>
-
-        <h2 style={{ fontSize: '2rem', color: '#fff', marginBottom: '3rem', textTransform: 'uppercase' }}>Our Team</h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '2rem',
-          marginBottom: '4rem'
-        }}>
-          {team.map((member, idx) => (
-            <div key={idx} style={{ textAlign: 'center' }}>
-              <img src={member.image} alt={member.name} style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #cc0000', marginBottom: '1rem' }} />
-              <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: '0.5rem 0' }}>{member.name}</h3>
-              <p style={{ color: '#cc0000', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase' }}>{member.role}</p>
-            </div>
-          ))}
-        </div>
-
-        {about.values && (
-          <>
-            <h2 style={{ fontSize: '2rem', color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>Our Values</h2>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '2rem',
-              textAlign: 'left'
+    <div style={{ backgroundColor: COLORS.bg, minHeight: '100vh' }}>
+      <section style={{
+        padding: `${SPACING.xxxl} ${SPACING.lg} ${SPACING.xl}`,
+        backgroundColor: COLORS.bg,
+      }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: SPACING.lg,
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: '40px',
+              height: '2px',
+              background: COLORS.primary,
+            }} />
+            <span style={{
+              fontFamily: FONT.body,
+              fontSize: '0.85rem',
+              color: COLORS.primary,
+              fontWeight: 700,
+              letterSpacing: '4px',
+              textTransform: 'uppercase',
             }}>
-              {about.values.map((val, idx) => (
-                <div key={idx} style={{ padding: '1.5rem', backgroundColor: '#1a1a1a', borderLeft: '4px solid #cc0000' }}>
-                  <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>{val.title}</h3>
-                  <p style={{ color: '#ccc' }}>{val.description}</p>
+              Studio
+            </span>
+          </div>
+
+          <h1 style={{
+            fontFamily: FONT.display,
+            fontSize: 'clamp(2.5rem, 7vw, 4.5rem)',
+            color: COLORS.white,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '3px',
+            margin: 0,
+            marginBottom: SPACING.xl,
+            lineHeight: '0.95',
+          }}>
+            About Us
+          </h1>
+
+          <p style={{
+            fontFamily: FONT.body,
+            fontSize: '1.15rem',
+            color: COLORS.secondary,
+            lineHeight: '1.7',
+            margin: 0,
+            maxWidth: '780px',
+            textAlign: 'left',
+            fontWeight: 500,
+          }}>
+            {about.description}
+          </p>
+        </div>
+      </section>
+
+      <section style={{
+        padding: `${SPACING.xxl} ${SPACING.lg}`,
+        backgroundColor: COLORS.bg,
+        borderTop: `1px solid ${COLORS.inputBorder}`,
+      }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: SPACING.lg,
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: '40px',
+              height: '2px',
+              background: COLORS.primary,
+            }} />
+            <span style={{
+              fontFamily: FONT.body,
+              fontSize: '0.85rem',
+              color: COLORS.primary,
+              fontWeight: 700,
+              letterSpacing: '4px',
+              textTransform: 'uppercase',
+            }}>
+              The Team
+            </span>
+          </div>
+
+          <h2 style={{
+            fontFamily: FONT.display,
+            fontSize: 'clamp(2rem, 5vw, 3.25rem)',
+            color: COLORS.white,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '3px',
+            margin: 0,
+            marginBottom: SPACING.xl,
+            lineHeight: '0.95',
+          }}>
+            Our Founders
+          </h2>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: SPACING.lg,
+          }}
+          className="about-team-grid"
+          >
+            {founders.map((member, idx) => {
+              const placeholder = `https://via.placeholder.com/256/141414/cc0000?text=${encodeURIComponent(member.name?.[0] || 'R')}`;
+              const imgSrc = member.image && member.image.trim() ? member.image : placeholder;
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: SPACING.md,
+                    padding: SPACING.xl,
+                    background: COLORS.surface,
+                    borderRadius: BORDER_RADIUS.md,
+                    border: `1px solid ${COLORS.inputBorder}`,
+                    transition: 'box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    textAlign: 'center',
+                  }}
+                  className="about-team-card"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '0 0 50px rgba(225, 6, 0, 0.2), 0 0 0 1px rgba(225, 6, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div className="about-portrait" style={{
+                    position: 'relative',
+                    width: '128px',
+                    height: '128px',
+                    flexShrink: 0,
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    background: GRADIENTS.primary,
+                    border: `3px solid ${COLORS.primary}`,
+                    boxShadow: '0 0 24px rgba(225, 6, 0, 0.3)',
+                  }}>
+                    <img
+                      src={imgSrc}
+                      alt={member.name}
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.src = placeholder; }}
+                      style={{
+                        width: '100%', height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ flex: 1, minWidth: 0, width: '100%' }}>
+                    <h3 style={{
+                      fontFamily: FONT.display,
+                      fontSize: '1.3rem',
+                      color: COLORS.white,
+                      margin: 0,
+                      marginBottom: '0.25rem',
+                      letterSpacing: '1.5px',
+                      fontWeight: 700,
+                      lineHeight: '1.1',
+                      textTransform: 'uppercase',
+                    }}>
+                      {member.name}
+                    </h3>
+                    <p style={{
+                      color: COLORS.primary,
+                      fontFamily: FONT.body,
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      margin: 0,
+                      fontSize: '0.75rem',
+                      letterSpacing: '2px',
+                    }}>
+                      {member.role}
+                    </p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .about-team-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 1100px) and (min-width: 901px) {
+          .about-team-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .about-portrait {
+            width: 96px !important;
+            height: 96px !important;
+          }
+          .about-team-card {
+            padding: ${SPACING.md} !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { COLORS, SPACING, BORDER_RADIUS, FONT, labelStyle, inputStyle, btnStyle } from '../../styles';
 
 const AboutEditor = () => {
   const [about, setAbout] = useState({ description: '', values: [] });
@@ -58,30 +59,30 @@ const AboutEditor = () => {
     setFounders(founders.filter((_, i) => i !== index));
   };
 
-  if (loading) return <div style={{ color: '#fff' }}>Loading...</div>;
+  if (loading) return <div style={{ color: COLORS.white }}>Loading...</div>;
 
   return (
     <div>
-      <h2 style={{ color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>About & Team Editor</h2>
-      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <h2 style={{ color: COLORS.white, marginBottom: SPACING.md, textTransform: 'uppercase' }}>About & Team Editor</h2>
+      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: SPACING.lg }}>
         {/* Studio Description */}
-        <div style={{ backgroundColor: '#1a1a1a', padding: '1.5rem', borderRadius: '8px', border: '1px solid #333' }}>
-          <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Studio Description</h3>
+        <div style={{ backgroundColor: COLORS.inputBg, padding: SPACING.md, borderRadius: BORDER_RADIUS.md, border: `1px solid ${COLORS.inputBorder}` }}>
+          <h3 style={{ color: COLORS.white, marginBottom: SPACING.sm, textTransform: 'uppercase' }}>Studio Description</h3>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label style={labelStyle}>Main About Text</label>
             <textarea
               value={about.description || ''}
               onChange={e => setAbout({ ...about, description: e.target.value })}
-              style={{...inputStyle, minHeight: '150px'}}
+              style={{ ...inputStyle, minHeight: '150px' }}
               required
             />
           </div>
         </div>
 
         {/* Team Images */}
-        <div style={{ backgroundColor: '#1a1a1a', padding: '1.5rem', borderRadius: '8px', border: '1px solid #333' }}>
-          <h3 style={{ color: '#fff', marginBottom: '1rem' }}>Team Member Images</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+        <div style={{ backgroundColor: COLORS.inputBg, padding: SPACING.md, borderRadius: BORDER_RADIUS.md, border: `1px solid ${COLORS.inputBorder}` }}>
+          <h3 style={{ color: COLORS.white, marginBottom: SPACING.sm, textTransform: 'uppercase' }}>Team Member Images</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: SPACING.sm }}>
             {['srinu', 'bobby', 'badri'].map(name => (
               <div key={name} style={{ display: 'flex', flexDirection: 'column' }}>
                 <label style={{ ...labelStyle, textTransform: 'capitalize' }}>{name} Profile URL</label>
@@ -97,16 +98,16 @@ const AboutEditor = () => {
         </div>
 
         {/* Founders Editor */}
-        <div style={{ backgroundColor: '#1a1a1a', padding: '1.5rem', borderRadius: '8px', border: '1px solid #333' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ color: '#fff' }}>Founders List</h3>
-            <button type="button" onClick={addFounder} style={{ padding: '0.5rem 1rem', backgroundColor: '#cc0000', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Add Founder</button>
+        <div style={{ backgroundColor: COLORS.inputBg, padding: SPACING.md, borderRadius: BORDER_RADIUS.md, border: `1px solid ${COLORS.inputBorder}` }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.sm }}>
+            <h3 style={{ color: COLORS.white }}>Founders List</h3>
+            <button type="button" onClick={addFounder} style={{ padding: '0.5rem 1rem', backgroundColor: COLORS.primary, color: COLORS.white, border: 'none', borderRadius: BORDER_RADIUS.md, cursor: 'pointer' }}>Add Founder</button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
             {founders.map((f, idx) => (
-              <div key={idx} style={{ padding: '1rem', backgroundColor: '#0a0a0a', border: '1px solid #444', borderRadius: '4px', position: 'relative' }}>
-                <button type="button" onClick={() => removeFounder(idx)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer' }}>Remove</button>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+              <div key={idx} style={{ padding: SPACING.sm, backgroundColor: COLORS.bg, border: `1px solid ${COLORS.inputBorder}`, borderRadius: BORDER_RADIUS.md, position: 'relative' }}>
+                <button type="button" onClick={() => removeFounder(idx)} style={{ position: 'absolute', top: SPACING.xs, right: SPACING.sm, background: 'none', border: 'none', color: COLORS.error, cursor: 'pointer' }}>Remove</button>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: SPACING.sm }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <label style={labelStyle}>Founder Name</label>
                     <input placeholder="Name" value={f.name} onChange={e => updateFounder(idx, 'name', e.target.value)} style={inputStyle} required />
@@ -121,7 +122,7 @@ const AboutEditor = () => {
                   </div>
                   <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column' }}>
                     <label style={labelStyle}>Founder Description</label>
-                    <textarea placeholder="Description" value={f.description} onChange={e => updateFounder(idx, 'description', e.target.value)} style={{...inputStyle, minHeight: '60px'}} required />
+                    <textarea placeholder="Description" value={f.description} onChange={e => updateFounder(idx, 'description', e.target.value)} style={{ ...inputStyle, minHeight: '60px' }} required />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <label style={labelStyle}>YouTube URL</label>
@@ -144,17 +145,7 @@ const AboutEditor = () => {
         <button
           type="submit"
           disabled={saving}
-          style={{
-            padding: '1rem',
-            backgroundColor: '#cc0000',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            cursor: 'pointer',
-            fontSize: '1.1rem'
-          }}
+          style={btnStyle}
         >
           {saving ? 'Saving...' : 'Save All Changes'}
         </button>
@@ -162,8 +153,5 @@ const AboutEditor = () => {
     </div>
   );
 };
-
-const labelStyle = { display: 'block', color: '#aaa', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: '500' };
-const inputStyle = { padding: '0.8rem', backgroundColor: '#0a0a0a', border: '1px solid #333', borderRadius: '4px', color: '#fff' };
 
 export default AboutEditor;

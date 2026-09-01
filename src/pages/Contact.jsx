@@ -1,95 +1,174 @@
 import React from 'react';
 import { Mail, Instagram, Linkedin, Youtube, Play } from 'lucide-react';
+import DiscordIcon from '../components/DiscordIcon';
 import { useFirestoreContent } from '../hooks/useFirestoreContent';
+import { DEFAULT_CONTENT } from '../utils/defaultContent';
+import { COLORS, SPACING, FONT, BORDER_RADIUS } from '../styles';
 
 const Contact = () => {
-  const { content, loading } = useFirestoreContent();
-  const contact = content?.contact;
-
-  if (loading) return <div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>Loading...</div>;
-  if (!contact) return <div style={{ textAlign: 'center', padding: '5rem', color: '#fff' }}>Contact content not found.</div>;
+  const { content: hookContent } = useFirestoreContent();
+  const content = hookContent || DEFAULT_CONTENT;
+  const contact = content?.contact || DEFAULT_CONTENT.contact;
 
   const socials = [
-    { name: 'Instagram', icon: <Instagram />, url: contact.instagramUrl },
-    { name: 'LinkedIn', icon: <Linkedin />, url: contact.linkedinUrl },
-    { name: 'YouTube', icon: <Youtube />, url: contact.youtubeUrl },
-    { name: 'Play Store', icon: <Play />, url: contact.playstoreUrl },
+    { name: 'Instagram', icon: Instagram, url: contact.instagramUrl },
+    { name: 'LinkedIn', icon: Linkedin, url: contact.linkedinUrl },
+    { name: 'YouTube', icon: Youtube, url: contact.youtubeUrl },
+    { name: 'Play Store', icon: Play, url: contact.playstoreUrl },
+    { name: 'Discord', icon: DiscordIcon, url: contact.discordUrl },
   ].filter(s => s.url);
 
   return (
-    <div style={{ padding: '5rem 2rem', backgroundColor: '#0a0a0a', minHeight: '100vh', textAlign: 'center' }}>
-      <h1 style={{ fontSize: '3rem', color: '#fff', marginBottom: '2rem', textTransform: 'uppercase' }}>Get In Touch</h1>
-      <p style={{ fontSize: '1.2rem', color: '#ccc', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
-        Have questions or just want to say hi? Reach out to us through any of the following channels.
-      </p>
-
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '2rem',
-        maxWidth: '600px',
-        margin: '0 auto'
+    <div style={{ backgroundColor: COLORS.bg, minHeight: '100vh' }}>
+      <section style={{
+        padding: `${SPACING.xxxl} ${SPACING.lg}`,
+        backgroundColor: COLORS.bg,
+        minHeight: '80vh',
       }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '1rem',
-          padding: '1.5rem 2rem',
-          backgroundColor: '#1a1a1a',
-          border: '1px solid #333',
-          borderRadius: '8px',
-          width: '100%',
-          color: '#fff',
-          fontSize: '1.2rem'
-        }}>
-          <Mail color="#cc0000" />
-          <span style={{ textDecoration: 'none', color: 'inherit' }}>{contact.email}</span>
-        </div>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: SPACING.lg,
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: '40px',
+              height: '2px',
+              background: COLORS.primary,
+            }} />
+            <span style={{
+              fontFamily: FONT.body,
+              fontSize: '0.85rem',
+              color: COLORS.primary,
+              fontWeight: 700,
+              letterSpacing: '4px',
+              textTransform: 'uppercase',
+            }}>
+              Contact
+            </span>
+          </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '1rem',
-          width: '100%'
-        }}>
-          {socials.map((social, idx) => (
-            <a
-              key={idx}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                padding: '1rem',
-                backgroundColor: '#1a1a1a',
-                border: '1px solid #333',
-                borderRadius: '8px',
-                color: '#ccc',
+          <h1 style={{
+            fontFamily: FONT.display,
+            fontSize: 'clamp(2.5rem, 7vw, 4.5rem)',
+            color: COLORS.white,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '3px',
+            margin: 0,
+            marginBottom: SPACING.lg,
+            lineHeight: '0.95',
+          }}>
+            Get In Touch
+          </h1>
+
+          <p style={{
+            fontFamily: FONT.body,
+            fontSize: '1.1rem',
+            color: COLORS.secondary,
+            lineHeight: '1.7',
+            margin: 0,
+            marginBottom: SPACING.xl,
+            maxWidth: '640px',
+            fontWeight: 500,
+          }}>
+            Have questions or just want to say hi? Reach out to us through any of the following channels.
+          </p>
+
+          {/* Email — prominent */}
+          {contact.email && (
+            <div style={{
+              paddingBottom: SPACING.xl,
+              marginBottom: SPACING.xl,
+              borderBottom: `1px solid ${COLORS.border}`,
+            }}>
+              <div style={{
+                fontFamily: FONT.body,
+                fontSize: '0.85rem',
+                color: COLORS.muted,
+                textTransform: 'uppercase',
+                letterSpacing: '3px',
+                fontWeight: 600,
+                marginBottom: '0.75rem',
+              }}>
+                Email
+              </div>
+              <a
+                href={`mailto:${contact.email}`}
+                style={{
+                  fontFamily: FONT.display,
+                  fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                  color: COLORS.white,
+                  textDecoration: 'none',
+                  letterSpacing: '1px',
+                  fontWeight: 700,
+                  transition: 'color 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                  display: 'inline-block',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = COLORS.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = COLORS.white}
+              >
+                {contact.email}
+              </a>
+            </div>
+          )}
+
+          {/* Socials — clean icon + label row, no boxes */}
+          {socials.length > 0 && (
+            <div>
+              <div style={{
+                fontFamily: FONT.body,
+                fontSize: '0.85rem',
+                color: COLORS.muted,
+                textTransform: 'uppercase',
+                letterSpacing: '3px',
+                fontWeight: 600,
+                marginBottom: SPACING.md,
+              }}>
+                Follow
+              </div>
+              <div style={{
                 display: 'flex',
+                gap: SPACING.xl,
+                flexWrap: 'wrap',
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                transition: 'all 0.3s',
-                textDecoration: 'none',
-                fontWeight: '500',
-                textTransform: 'uppercase'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#cc0000';
-                e.currentTarget.style.color = '#fff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#333';
-                e.currentTarget.style.color = '#ccc';
-              }}
-            >
-              {social.icon}
-              <span>{social.name}</span>
-            </a>
-          ))}
+              }}>
+                {socials.map((social, idx) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={idx}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.6rem',
+                        color: COLORS.secondary,
+                        textDecoration: 'none',
+                        fontFamily: FONT.body,
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '2px',
+                        transition: 'color 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = COLORS.primary}
+                      onMouseLeave={(e) => e.currentTarget.style.color = COLORS.secondary}
+                    >
+                      <Icon size={20} />
+                      {social.name}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };
